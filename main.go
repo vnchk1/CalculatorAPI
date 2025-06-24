@@ -16,7 +16,7 @@ type SumResponse struct {
 }
 
 func SumHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
+	if r.Method != http.MethodPost {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return
 	}
@@ -25,6 +25,7 @@ func SumHandler(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
 	}
 
 	var sum int
@@ -33,12 +34,12 @@ func SumHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resp := SumResponse{sum}
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set(http.CanonicalHeaderKey("content-type"), "application/json")
 	err = json.NewEncoder(w).Encode(resp)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
 	}
-
 }
 func main() {
 	http.HandleFunc("/sum", SumHandler)
