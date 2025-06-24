@@ -3,8 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
+	"log/slog"
 	"net/http"
+	"os"
 )
 
 type NumbersRequest struct {
@@ -16,8 +17,11 @@ type SumResponse struct {
 }
 
 func SumHandler(w http.ResponseWriter, r *http.Request) {
+	logger := slog.With(
+		"method", r.Method,
+	)
 	if r.Method != http.MethodPost {
-		log.Printf("Method %v not allowed", r.Method)
+		logger.Error("Method not allowed")
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return
 	}
@@ -25,7 +29,7 @@ func SumHandler(w http.ResponseWriter, r *http.Request) {
 	var req NumbersRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		log.Printf("Error with JSON decoding: %v", err)
+		logger.Error("Error with JSON decoding", "error", err)
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -39,13 +43,18 @@ func SumHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(http.CanonicalHeaderKey("content-type"), "application/json")
 	err = json.NewEncoder(w).Encode(resp)
 	if err != nil {
-		log.Printf("Error with JSON encoding: %v", err)
+		logger.Error("Error with JSON encoding", "error", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
+	logger.Info(fmt.Sprintf("Sum calculated: %v", sum))
 }
 func main() {
+	handler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelDebug,
+	})
+	slog.SetDefault(slog.New(handler))
 	http.HandleFunc("/sum", SumHandler)
 	fmt.Println("Listening on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	slog.Error("Server stopped", "error", http.ListenAndServe(":8080", nil))
 }
