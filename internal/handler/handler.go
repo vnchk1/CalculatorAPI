@@ -2,7 +2,7 @@ package handler
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/vnchk1/CalculatorAPI/pkg/models"
+	"github.com/vnchk1/CalculatorAPI/internal/app/models"
 	"net/http"
 )
 
