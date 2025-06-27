@@ -1,10 +1,12 @@
 package handler
 
 import (
-	"github.com/labstack/echo/v4"
+	"net/http"
+
 	"github.com/vnchk1/CalculatorAPI/internal/app/models"
 	"github.com/vnchk1/CalculatorAPI/internal/app/service"
-	"net/http"
+
+	"github.com/labstack/echo/v4"
 )
 
 func SumHandler(c echo.Context) error {
@@ -16,6 +18,7 @@ func SumHandler(c echo.Context) error {
 	}
 	sum, err := service.Sum(req.Numbers)
 	if err != nil {
+		c.Logger().Error(err)
 		return err
 	}
 
