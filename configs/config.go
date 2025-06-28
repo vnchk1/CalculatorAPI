@@ -1,6 +1,7 @@
 package configs
 
 import (
+	"fmt"
 	"github.com/labstack/gommon/log"
 	"gopkg.in/yaml.v3"
 	"os"
@@ -25,7 +26,7 @@ func LoadConfig() (*Config, error) {
 	}
 	var cfg Config
 	if err := yaml.Unmarshal(data, &cfg); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error parsing config.yaml: %v", err)
 	}
 	return &cfg, nil
 }
