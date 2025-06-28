@@ -23,5 +23,4 @@ func main() {
 	e.Use(middleware.Recover())
 	e.POST("/sum", handler.SumHandler)
 	e.Logger.Fatal(e.Start(":" + port))
-
 }
