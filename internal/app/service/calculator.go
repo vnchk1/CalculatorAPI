@@ -6,7 +6,7 @@ import (
 
 func Sum(numbers []int) (int, error) {
 	if len(numbers) < 1 {
-		return 0, errors.New("No numbers provided")
+		return 0, errors.New("Empty request body")
 	}
 
 	var sum int

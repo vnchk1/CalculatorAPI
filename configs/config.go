@@ -2,8 +2,8 @@ package configs
 
 import (
 	"fmt"
-	"github.com/labstack/gommon/log"
 	"gopkg.in/yaml.v3"
+	"log/slog"
 	"os"
 )
 
@@ -31,19 +31,15 @@ func LoadConfig() (*Config, error) {
 	return &cfg, nil
 }
 
-func ConvertLogLevel(lvlStr string) log.Lvl {
+func ConvertLogLevel(lvlStr string) slog.Level {
 	switch lvlStr {
 	case "debug":
-		return log.DEBUG
-	case "info":
-		return log.INFO
+		return slog.LevelDebug
 	case "warn":
-		return log.WARN
+		return slog.LevelWarn
 	case "error":
-		return log.ERROR
-	case "off":
-		return log.OFF
+		return slog.LevelError
 	default:
-		return log.INFO
+		return slog.LevelInfo
 	}
 }

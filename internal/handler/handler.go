@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/vnchk1/CalculatorAPI/internal/app/logging"
 	"net/http"
 
 	"github.com/vnchk1/CalculatorAPI/internal/app/models"
@@ -12,17 +13,18 @@ import (
 )
 
 func SumHandler(c echo.Context) error {
+	logger := logging.Logger()
 	var req models.NumbersRequest
 	id := uuid.New()
 
 	if err := c.Bind(&req); err != nil {
-		c.Logger().Error("Error with parsing JSON ", err)
+		logger.Error("Error with parsing JSON", "error", err)
 		return c.JSON(http.StatusBadRequest, echo.Map{"error": "Invalid request body"})
 	}
 	sum, err := service.Sum(req.Numbers)
 	if err != nil {
-		c.Logger().Error(err)
-		return err
+		logger.Error("Calculating sum problem", "error", err)
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": "Empty request body"})
 	}
 	storage := store.GetStorage()
 	storage.MapSet(id, sum)
