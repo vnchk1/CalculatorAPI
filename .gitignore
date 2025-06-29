@@ -30,3 +30,5 @@ Thumbs.db
 *.pb.go
 *.pb.gw.go
 *.grpc.pb.go
+
+plan.txt
