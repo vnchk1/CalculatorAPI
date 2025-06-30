@@ -1,35 +1,49 @@
 package configs
 
 import (
-	"fmt"
-	"gopkg.in/yaml.v3"
+	"github.com/caarlos0/env/v11"
+	"github.com/joho/godotenv"
 	"log/slog"
-	"os"
 )
 
 type Config struct {
-	Server ServerConfig `yaml:"server"`
-	Logger LoggerConfig `yaml:"logger"`
+	ServerPort  string `env:"SERVER_PORT" envDefault:"8080"`
+	LoggerLevel string `env:"LOGGER_LEVEL" envDefault:"info"`
 }
 
-type ServerConfig struct {
-	Port string `yaml:"port"`
-}
-type LoggerConfig struct {
-	Level string `yaml:"level"`
-}
+func LoadConfig() *Config {
+	_ = godotenv.Load()
 
-func LoadConfig() (*Config, error) {
-	data, err := os.ReadFile("configs/config.yaml")
-	if err != nil {
-		return nil, err
-	}
 	var cfg Config
-	if err := yaml.Unmarshal(data, &cfg); err != nil {
-		return nil, fmt.Errorf("error parsing config.yaml: %v", err)
+	if err := env.Parse(&cfg); err != nil {
+		slog.Error("error parsing env", "error", err)
 	}
-	return &cfg, nil
+	return &cfg
 }
+
+//type Config struct {
+//	Server ServerConfig `yaml:"server"`
+//	Logger LoggerConfig `yaml:"logger"`
+//}
+
+//type ServerConfig struct {
+//	Port string `yaml:"port"`
+//}
+//type LoggerConfig struct {
+//	Level string `yaml:"level"`
+//}
+//
+//func LoadConfig() (*Config, error) {
+//	data, err := os.ReadFile("configs/config.yaml")
+//	if err != nil {
+//		return nil, err
+//	}
+//	var cfg Config
+//	if err := yaml.Unmarshal(data, &cfg); err != nil {
+//		return nil, fmt.Errorf("error parsing config.yaml: %v", err)
+//	}
+//	return &cfg, nil
+//}
 
 func ConvertLogLevel(lvlStr string) slog.Level {
 	switch lvlStr {

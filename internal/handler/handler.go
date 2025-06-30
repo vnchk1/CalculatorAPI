@@ -29,6 +29,6 @@ func SumHandler(c echo.Context) error {
 	storage := store.GetStorage()
 	storage.MapSet(id, sum)
 	//fmt.Println(storage.MapGet(id))
-	//fmt.Println(storage.MapGetAll())
+	//GetAllMaps := storage.MapGetAll())
 	return c.JSON(http.StatusOK, models.SumResponse{Sum: sum})
 }

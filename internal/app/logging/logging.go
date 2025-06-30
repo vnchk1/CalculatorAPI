@@ -7,12 +7,8 @@ import (
 )
 
 func HandlerInit() *slog.JSONHandler {
-	cfg, err := configs.LoadConfig()
-	if err != nil {
-		slog.Error("Error loading config", "err", err)
-	}
-	logLvlStr := cfg.Logger.Level
-	logLevel := configs.ConvertLogLevel(logLvlStr)
+	cfg := configs.LoadConfig()
+	logLevel := configs.ConvertLogLevel(cfg.LoggerLevel)
 	logHandler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 		Level: logLevel,
 	})
