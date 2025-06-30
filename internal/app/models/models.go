@@ -7,3 +7,7 @@ type NumbersRequest struct {
 type SumResponse struct {
 	Sum int `json:"sum"`
 }
+
+type MultiplyResponse struct {
+	Multiply int `json:"multiply"`
+}

@@ -16,5 +16,6 @@ func main() {
 	e.Use(middleware.LoggingMiddleware(logger))
 	//e.Use(middleware.Recover())
 	e.POST("/sum", handler.SumHandler)
+	e.POST("/multiply", handler.MultiplyHandler)
 	e.Logger.Fatal(e.Start(":" + port))
 }

@@ -32,3 +32,23 @@ func SumHandler(c echo.Context) error {
 	//GetAllMaps := storage.MapGetAll())
 	return c.JSON(http.StatusOK, models.SumResponse{Sum: sum})
 }
+
+func MultiplyHandler(c echo.Context) error {
+	logger := logging.Logger()
+	storage := store.GetStorage()
+	var req models.NumbersRequest
+	id := uuid.New()
+
+	if err := c.Bind(&req); err != nil {
+		logger.Error("Error with parsing JSON", "error", err)
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": "Invalid request body"})
+	}
+
+	multiply, err := service.Multiply(req.Numbers)
+	if err != nil {
+		logger.Error("Calculating multiply problem", "error", err)
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": "Empty request body"})
+	}
+	storage.MapSet(id, multiply)
+	return c.JSON(http.StatusOK, models.MultiplyResponse{Multiply: multiply})
+}
