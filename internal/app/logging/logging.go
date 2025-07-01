@@ -6,16 +6,23 @@ import (
 	"os"
 )
 
-func HandlerInit() *slog.JSONHandler {
-	cfg := configs.LoadConfig()
-	logLevel := configs.ConvertLogLevel(cfg.LoggerLevel)
+func NewLogger(cfg *configs.Config) *slog.Logger {
+	logLevel := ConvertLogLevel(cfg.LoggerLevel)
 	logHandler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 		Level: logLevel,
 	})
-	return logHandler
+	return slog.New(logHandler)
 }
 
-func Logger() *slog.Logger {
-	logger := slog.New(HandlerInit())
-	return logger
+func ConvertLogLevel(lvlStr string) slog.Level {
+	switch lvlStr {
+	case "debug":
+		return slog.LevelDebug
+	case "warn":
+		return slog.LevelWarn
+	case "error":
+		return slog.LevelError
+	default:
+		return slog.LevelInfo
+	}
 }

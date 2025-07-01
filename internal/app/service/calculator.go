@@ -4,27 +4,27 @@ import (
 	"errors"
 )
 
-func Sum(numbers []int) (int, error) {
+func Sum(numbers []int) (result int, err error) {
 	if len(numbers) < 1 {
-		return 0, errors.New("Empty request body")
+		err = errors.New("empty request body")
+		return
 	}
 
-	var sum int
 	for _, num := range numbers {
-		sum += num
+		result += num
 	}
-	return sum, nil
+	return
 }
 
-func Multiply(numbers []int) (int, error) {
+func Multiply(numbers []int) (result int, err error) {
 	if len(numbers) < 1 {
-		return 0, errors.New("Empty request body")
+		err = errors.New("empty request body")
+		return
 	}
 
-	var multiply int
-	multiply = 1
+	result = 1
 	for _, num := range numbers {
-		multiply *= num
+		result *= num
 	}
-	return multiply, nil
+	return
 }

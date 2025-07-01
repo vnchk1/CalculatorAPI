@@ -29,6 +29,7 @@ func GetStorage() *SafeMap {
 	})
 	return storageInstance
 }
+
 func (s *SafeMap) MapSet(key uuid.UUID, value int) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
