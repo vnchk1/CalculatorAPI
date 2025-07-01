@@ -23,7 +23,7 @@ func NewHandler(logger *slog.Logger, storage *store.SafeMap) *Handler {
 
 func (h *Handler) SumHandler(c echo.Context) error {
 	var req models.NumbersRequest
-	id := uuid.New()
+	id := uuid.New().String()
 
 	if err := c.Bind(&req); err != nil {
 		h.logger.Error("error with parsing JSON", "error", err)
