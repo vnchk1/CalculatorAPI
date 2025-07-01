@@ -12,7 +12,7 @@ var (
 
 type SafeMap struct {
 	mu sync.RWMutex
-	m  map[string]int
+	m  map[string][]int
 }
 
 type SafeMaps struct {
@@ -20,7 +20,7 @@ type SafeMaps struct {
 }
 
 func NewSafeMap() *SafeMap {
-	return &SafeMap{m: make(map[string]int)}
+	return &SafeMap{m: make(map[string][]int)}
 }
 
 func GetStorage() *SafeMap {
@@ -33,10 +33,10 @@ func GetStorage() *SafeMap {
 func (s *SafeMap) MapSet(key string, value int) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	s.m[key] = value
+	s.m[key] = append(s.m[key], value)
 }
 
-func (s *SafeMap) MapGet(key string) (int, bool) {
+func (s *SafeMap) MapGet(key string) ([]int, bool) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 	value, ok := s.m[key]
@@ -49,12 +49,12 @@ func (s *SafeMap) MapDelete(key string) {
 	delete(s.m, key)
 }
 
-func (s *SafeMap) MapGetAll() map[string]int {
+func (s *SafeMap) MapGetAll() map[string][]int {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
-	mapCopy := make(map[string]int, len(s.m))
+	mapCopy := make(map[string][]int, len(s.m))
 	for key, value := range s.m {
-		mapCopy[key] = value
+		mapCopy[key] = append(mapCopy[key], value...)
 	}
 	return mapCopy
 }

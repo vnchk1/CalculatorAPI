@@ -1,7 +1,8 @@
 package models
 
 type NumbersRequest struct {
-	Numbers []int `json:"numbers"`
+	Numbers []int  `json:"numbers"`
+	Token   string `json:"token"`
 }
 
 type SumResponse struct {

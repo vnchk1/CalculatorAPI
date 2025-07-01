@@ -47,7 +47,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	//storage.MapListAll()
+	storage.MapListAll()
 
 	if err := e.Shutdown(ctx); err != nil {
 		logger.Error("server forced to shutdown", "error", err)
