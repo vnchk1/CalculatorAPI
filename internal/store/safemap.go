@@ -1,6 +1,7 @@
 package store
 
 import (
+	"fmt"
 	"github.com/google/uuid"
 	"sync"
 )
@@ -36,10 +37,11 @@ func (s *SafeMap) MapSet(key uuid.UUID, value int) {
 	s.m[key] = value
 }
 
-func (s *SafeMap) MapGet(key uuid.UUID) int {
+func (s *SafeMap) MapGet(key uuid.UUID) (int, bool) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
-	return s.m[key]
+	value, ok := s.m[key]
+	return value, ok
 }
 
 func (s *SafeMap) MapDelete(key uuid.UUID) {
@@ -56,4 +58,13 @@ func (s *SafeMap) MapGetAll() map[uuid.UUID]int {
 		mapCopy[key] = value
 	}
 	return mapCopy
+}
+
+func (s *SafeMap) MapListAll() {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	fmt.Printf("List of all maps: \n")
+	for key, value := range s.m {
+		fmt.Printf("%v : %v \n", key, value)
+	}
 }

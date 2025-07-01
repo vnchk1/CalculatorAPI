@@ -1,17 +1,23 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"github.com/labstack/echo/v4"
 	"github.com/vnchk1/CalculatorAPI/configs"
 	"github.com/vnchk1/CalculatorAPI/internal/app/logging"
 	"github.com/vnchk1/CalculatorAPI/internal/app/middleware"
 	"github.com/vnchk1/CalculatorAPI/internal/handler"
 	"github.com/vnchk1/CalculatorAPI/internal/store"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
 func main() {
 	e := echo.New()
-
 	cfg := configs.LoadConfig()
 	logger := logging.NewLogger(cfg)
 	storage := store.GetStorage()
@@ -24,5 +30,28 @@ func main() {
 	e.POST("/sum", h.SumHandler)
 	e.POST("/multiply", h.MultiplyHandler)
 
-	e.Logger.Fatal(e.Start(":" + cfg.ServerPort))
+	go func() {
+		err := e.Start(":" + cfg.ServerPort)
+		if err != nil && !errors.Is(err, http.ErrServerClosed) {
+			logger.Error("error starting server", "error", err)
+		}
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+
+	<-quit
+
+	logger.Info("shutting down server...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	//storage.MapListAll()
+
+	if err := e.Shutdown(ctx); err != nil {
+		logger.Error("server forced to shutdown", "error", err)
+	} else {
+		logger.Info("server gracefully shutdown")
+	}
 }
