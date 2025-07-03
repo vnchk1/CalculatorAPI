@@ -5,7 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"github.com/labstack/echo/v4"
+	echoSwagger "github.com/swaggo/echo-swagger"
 	"github.com/vnchk1/CalculatorAPI/configs"
+	_ "github.com/vnchk1/CalculatorAPI/docs"
 	"github.com/vnchk1/CalculatorAPI/internal/app/logging"
 	"github.com/vnchk1/CalculatorAPI/internal/app/middleware"
 	"github.com/vnchk1/CalculatorAPI/internal/handler"
@@ -17,8 +19,22 @@ import (
 	"time"
 )
 
+// @title CalculatorAPI
+// @version 1.0
+// @description Это API для вычисления суммы и произведения
+
+// @host localhost:8080
+// @BasePath /
+
+// @tag.name sum
+// @tag.description Вычисление суммы
+
+// @tag.name multiply
+// @tag.description Вычисление произведения
+
 func main() {
 	e := echo.New()
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	cfg := configs.LoadConfig()
 	logger := logging.NewLogger(cfg)
 	storage := store.GetStorage()
