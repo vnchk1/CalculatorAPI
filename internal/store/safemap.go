@@ -14,10 +14,6 @@ type SafeMap struct {
 	m  map[string][]int
 }
 
-type SafeMaps struct {
-	storage *SafeMap
-}
-
 func NewSafeMap() *SafeMap {
 	return &SafeMap{m: make(map[string][]int)}
 }
