@@ -1,0 +1,104 @@
+basePath: /
+definitions:
+  models.ErrorResponse:
+    description: ErrorResponse представляет исходящий JSON со строкой ошибки ("Invalid
+      request body" или "Empty request body")
+    properties:
+      error:
+        example: Invalid request body
+        type: string
+    type: object
+  models.MultiplyResponse:
+    description: MultiplyResponse представляет исходящий JSON с целым числом
+    properties:
+      multiply:
+        example: 8
+        type: integer
+    type: object
+  models.NumbersRequest:
+    description: NumbersRequest представляет входной JSON с массивом чисел и токеном
+    properties:
+      numbers:
+        example:
+        - 1
+        - 2
+        - 4
+        items:
+          type: integer
+        type: array
+      token:
+        example: 82a51b41-b7c7-4405-859e-7936xxxxxxxx
+        type: string
+    type: object
+  models.SumResponse:
+    description: SumResponse представляет исходящий JSON с целым числом
+    properties:
+      sum:
+        example: 7
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Это API для вычисления суммы и произведения
+  title: CalculatorAPI
+  version: "1.0"
+paths:
+  /multiply:
+    post:
+      consumes:
+      - application/json
+      description: Умножает все числа из массива запроса
+      parameters:
+      - description: Массив чисел и токен пользователя
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.NumbersRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный результат с произведением
+          schema:
+            $ref: '#/definitions/models.MultiplyResponse'
+        "400":
+          description: 'Ошибка: "Invalid request body" или "Empty request body" '
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Произведение чисел
+      tags:
+      - multiply
+  /sum:
+    post:
+      consumes:
+      - application/json
+      description: Складывает все числа из запроса и сохраняется результат по токену
+      parameters:
+      - description: Массив чисел и токен пользователя
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.NumbersRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный результат с суммой
+          schema:
+            $ref: '#/definitions/models.SumResponse'
+        "400":
+          description: 'Ошибка: "Invalid request body" или "Empty request body" '
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Сложение чисел
+      tags:
+      - sum
+swagger: "2.0"
+tags:
+- description: Вычисление суммы
+  name: sum
+- description: Вычисление произведения
+  name: multiply

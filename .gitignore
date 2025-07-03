@@ -4,7 +4,7 @@
 *.exe
 *.out
 *.bin
-
+*.env
 # Файлы зависимостей Go
 /go.mod
 /go.sum
@@ -30,3 +30,5 @@ Thumbs.db
 *.pb.go
 *.pb.gw.go
 *.grpc.pb.go
+
+plan.txt
