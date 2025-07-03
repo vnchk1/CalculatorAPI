@@ -1,7 +1,6 @@
 package store
 
 import (
-	"fmt"
 	"sync"
 )
 
@@ -57,13 +56,4 @@ func (s *SafeMap) MapGetAll() map[string][]int {
 		mapCopy[key] = append(mapCopy[key], value...)
 	}
 	return mapCopy
-}
-
-func (s *SafeMap) MapListAll() {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	fmt.Printf("List of all maps: \n")
-	for key, value := range s.m {
-		fmt.Printf("%v : %v \n", key, value)
-	}
 }

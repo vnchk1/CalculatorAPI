@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/vnchk1/CalculatorAPI/configs"
 	"github.com/vnchk1/CalculatorAPI/internal/app/logging"
@@ -47,7 +48,10 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	storage.MapListAll()
+	mapCopy := storage.MapGetAll()
+	for key, value := range mapCopy {
+		fmt.Printf("%v : %v \n", key, value)
+	}
 
 	if err := e.Shutdown(ctx); err != nil {
 		logger.Error("server forced to shutdown", "error", err)
