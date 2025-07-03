@@ -1,4 +1,4 @@
-APP_NAME := calculator-api.exe
+APP_NAME := calculator-api
 MAIN := cmd/api/main.go
 
 .PHONY: all build run swag fmt lint test clean tidy
