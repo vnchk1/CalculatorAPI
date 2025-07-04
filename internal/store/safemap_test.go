@@ -2,6 +2,7 @@ package store
 
 import (
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"testing"
 )
 
@@ -115,15 +116,13 @@ func TestMapDelete(t *testing.T) {
 			for _, v := range tt.values {
 				s.MapSet(tt.setupKey, v)
 			}
-			_, ok := s.MapGet(tt.getKey)       //проверка существует ли ключ
-			assert.Equal(t, tt.wantExists, ok) //ошибка ключ не найден
-			//если существует
-			if ok {
-				s.MapDelete(tt.getKey) //удаление улюча
+			_, ok := s.MapGet(tt.getKey) //проверка существует ли ключ
+			require.Equal(t, tt.wantExists, ok)
 
-				_, ok = s.MapGet(tt.getKey)          //проверка что удалили
-				assert.Equal(t, tt.wantDeleted, !ok) //сравнение. !ок потому что MapGet возвращает false, а нужно true - удалено
-			}
+			s.MapDelete(tt.getKey) //удаление улюча
+
+			_, ok = s.MapGet(tt.getKey)          //проверка что удалили
+			assert.Equal(t, tt.wantDeleted, !ok) //сравнение. !ок потому что MapGet возвращает false, а нужно true - удалено
 		})
 	}
 }
