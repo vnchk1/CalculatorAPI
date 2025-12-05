@@ -1,4 +1,4 @@
-# Calculator API
+# Rest API for arithmetic operations
 
 Веб-сервис на Go для арифметических вычислений через REST API.
 
